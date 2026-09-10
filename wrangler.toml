@@ -1,0 +1,63 @@
+#:schema node_modules/wrangler/config-schema.json
+
+# =============================================================================
+# Misskey Media Proxy Worker
+# -----------------------------------------------------------------------------
+# 这是原版 misskey-media-proxy（Fastify + sharp + 临时文件）的 Cloudflare
+# Workers 重构。部署：`pnpm install && pnpm deploy`。
+# =============================================================================
+
+name = "misskey-media-proxy-worker"
+main = "src/index.ts"
+
+# 兼容性日期：决定 Workers 运行时的默认行为集合。
+compatibility_date = "2026-01-01"
+
+# `global_fetch_strictly_public`：让子请求始终以「公网来源」路由，
+# 避免对自身 Zone 的请求绕过安全策略 / 回源，属于 SSRF 的纵深防御之一。
+compatibility_flags = ["global_fetch_strictly_public"]
+
+# 默认路由到 workers.dev 子域；如需绑定自定义域名请取消注释并填写：
+# routes = [
+#   { pattern = "mediaproxy.example.com", custom_domain = true },
+# ]
+
+# -----------------------------------------------------------------------------
+# 运行时配置（非机密）
+# -----------------------------------------------------------------------------
+[vars]
+# 请求远端时使用的 User-Agent。
+USER_AGENT = "MisskeyMediaProxyWorker/1.0.0"
+
+# 允许访问的私有网段（CIDR，逗号分隔）。为空表示严格拒绝所有私有地址。
+# 例：ALLOWED_PRIVATE_NETWORKS = "10.0.0.0/8,192.168.0.0/16,fd00::/8"
+ALLOWED_PRIVATE_NETWORKS = ""
+
+# 单个文件最大字节数（默认 250 MiB，与原版一致）。
+MAX_SIZE = "262144000"
+
+# CORS。
+CORS_ALLOW_ORIGIN = "*"
+CORS_ALLOW_HEADERS = "*"
+
+# 返回给浏览器的 CSP。保持默认即可；如需限制来源可在 CDN 层调整。
+CONTENT_SECURITY_POLICY = "default-src 'none'; img-src 'self'; media-src 'self'; style-src 'unsafe-inline'"
+
+# 是否启用 Cloudflare Image Resizing（cf.image）。设为 "false" 时，
+# 带转换查询的请求会返回 501（纯代理仍然可用）。
+ENABLE_IMAGE_RESIZING = "true"
+
+# -----------------------------------------------------------------------------
+# 模块规则
+# -----------------------------------------------------------------------------
+# 把 PNG 作为二进制「Data」模块打包；`src/index.ts` 会 import 占位图用于 fallback。
+[[rules]]
+type = "Data"
+globs = ["**/*.png"]
+fallthrough = true
+
+# -----------------------------------------------------------------------------
+# 可观测性
+# -----------------------------------------------------------------------------
+[observability]
+enabled = true

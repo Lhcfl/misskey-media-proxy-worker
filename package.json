@@ -1,0 +1,32 @@
+{
+	"name": "misskey-media-proxy-worker",
+	"version": "1.0.0",
+	"description": "Misskey 媒体代理（media-proxy）的 Cloudflare Workers 重构版：无数据库、无临时文件，仅转发/转换远端图片与视频并附加安全响应头。",
+	"private": true,
+	"type": "module",
+	"license": "AGPL-3.0-or-later",
+	"packageManager": "pnpm@10.33.0",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"ipaddr.js": "^2.2.0"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^5.0.0",
+		"typescript": "^5.6.0",
+		"vitest": "^2.1.0",
+		"wrangler": "^4.130.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"workerd"
+		]
+	}
+}

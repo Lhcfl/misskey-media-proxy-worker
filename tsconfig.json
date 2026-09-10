@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+		/* 目标：Workers 运行时基于 V8，支持较新的 ES 语法。 */
+		"target": "es2022",
+		"lib": ["es2022"],
+
+		/* 使用 ESM + bundler 解析，配合 Wrangler 的 esbuild 打包。 */
+		"module": "esnext",
+		"moduleResolution": "bundler",
+
+		/* 只引入 Cloudflare Workers 的全局类型（Request/Response/ReadableStream/cf 等）。 */
+		"types": ["@cloudflare/workers-types"],
+
+		/* 严格模式。 */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": false,
+
+		/* 互操作与打包友好选项。 */
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+
+		/* 仅做类型检查，产物由 Wrangler 负责。 */
+		"noEmit": true
+	},
+	"include": ["src/**/*.ts", "test/**/*.ts"],
+	"exclude": ["node_modules"]
+}

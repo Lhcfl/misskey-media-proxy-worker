@@ -1,0 +1,19 @@
+# 依赖
+node_modules
+
+# Wrangler / Cloudflare 产物
+.wrangler
+dist
+worker-configuration.d.ts
+
+# 日志与编辑器
+*.log
+.DS_Store
+.idea
+.vscode
+
+# 本地密钥（如有）
+.dev.vars
+
+# pi agent 运行状态
+.pi/
